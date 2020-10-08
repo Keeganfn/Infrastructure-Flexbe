@@ -4,7 +4,7 @@
 
 	<executable package_path="infrastructure_flexbe_behaviors.single_stage_system_behavior_sm" class="Single_Stage_System_BehaviorSM" />
 	<tagstring></tagstring>
-	<author>Keegan</author>
+	<author>Keegan Nave</author>
 	<date>Fri Sep 18 2020</date>
 	<description>
 		This is a template for a single stage, single action server arm movement connected to a generic pubsub that could communicate with a testing station.

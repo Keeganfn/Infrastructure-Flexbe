@@ -17,7 +17,7 @@ from grasp_reset_flexbe_states.trial_control_state_GR import Trial_Control_State
 
 '''
 Created on Mon Jun 15 2020
-@author: Keegan
+@author: Keegan Nave
 '''
 class Trial_Control_Behavior_GRSM(Behavior):
 	'''

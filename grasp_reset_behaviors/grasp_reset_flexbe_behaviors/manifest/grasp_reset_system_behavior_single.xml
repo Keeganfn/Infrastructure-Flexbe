@@ -4,7 +4,7 @@
 
 	<executable package_path="grasp_reset_flexbe_behaviors.grasp_reset_system_behavior_single_sm" class="Grasp_Reset_System_Behavior_SingleSM" />
 	<tagstring></tagstring>
-	<author>Keegan</author>
+	<author>Keegan Nave</author>
 	<date>Fri Sep 18 2020</date>
 	<description>
 		Behavior that runs the testbed but instead of multi stage arm movement it is single stage with one action server.

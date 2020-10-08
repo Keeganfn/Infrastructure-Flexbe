@@ -10,7 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from grasp_reset_flexbe_behaviors.test_control_behavior_gr_sm import Test_Control_Behavior_GRSM
 from grasp_reset_flexbe_behaviors.trial_control_behavior_gr_sm import Trial_Control_Behavior_GRSM
-from infrastructure_flexbe_states.stage_ac import StageActionClient as infrastructure_flexbe_states__StageActionClient
+from infrastructure_flexbe_states.stage_ac import StageActionClient
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -23,7 +23,7 @@ Created on Sat Jun 13 2020
 '''
 class Grasp_Reset_System_BehaviorSM(Behavior):
 	'''
-	(EXPERIMENTAL) This behavior uses the action server method of control of the robot arm during the grasp reset trials. Breaks up arm movement and testbed reset into stages. I dont think its the best method
+	(EXPERIMENTAL DONT USE) This behavior uses the action server method of control of the robot arm during the grasp reset trials. Breaks up arm movement and testbed reset into stages. I dont think its the best method
 	'''
 
 
@@ -79,37 +79,37 @@ class Grasp_Reset_System_BehaviorSM(Behavior):
 
 			# x:164 y:448
 			OperatableStateMachine.add('Position',
-										infrastructure_flexbe_states__StageActionClient(topic=self.position_topic),
+										StageActionClient(topic=self.position_topic),
 										transitions={'completed': 'Approach', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:342 y:449
 			OperatableStateMachine.add('Approach',
-										infrastructure_flexbe_states__StageActionClient(topic=self.approach_topic),
+										StageActionClient(topic=self.approach_topic),
 										transitions={'completed': 'Grasp', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:542 y:447
 			OperatableStateMachine.add('Grasp',
-										infrastructure_flexbe_states__StageActionClient(topic=self.grasp_topic),
+										StageActionClient(topic=self.grasp_topic),
 										transitions={'completed': 'Manipulate', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:730 y:452
 			OperatableStateMachine.add('Manipulate',
-										infrastructure_flexbe_states__StageActionClient(topic=self.manipulate_topic),
+										StageActionClient(topic=self.manipulate_topic),
 										transitions={'completed': 'Release', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:911 y:451
 			OperatableStateMachine.add('Release',
-										infrastructure_flexbe_states__StageActionClient(topic=self.release_topic),
+										StageActionClient(topic=self.release_topic),
 										transitions={'completed': 'Retreat', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:1109 y:456
 			OperatableStateMachine.add('Retreat',
-										infrastructure_flexbe_states__StageActionClient(topic=self.retreat_topic),
+										StageActionClient(topic=self.retreat_topic),
 										transitions={'completed': 'Trial_Control_Behavior_GR', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 

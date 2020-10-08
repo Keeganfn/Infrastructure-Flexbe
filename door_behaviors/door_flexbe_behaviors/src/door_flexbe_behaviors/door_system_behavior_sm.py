@@ -10,8 +10,9 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from infrastructure_flexbe_states.test_control_state import TestControlState
 from infrastructure_flexbe_states.trial_control_state import TrialControlState
-from infrastructure_flexbe_states.stage_ac import StageActionClient
 from infrastructure_flexbe_states.generic_pubsub import GenericPubSub
+from infrastructure_flexbe_states.generic_pub import GenericPub
+from infrastructure_flexbe_states.stage_ac import StageActionClient
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -22,23 +23,25 @@ from infrastructure_flexbe_states.generic_pubsub import GenericPubSub
 Created on Fri Sep 18 2020
 @author: Keegan Nave
 '''
-class Single_Stage_System_BehaviorSM(Behavior):
+class Door_System_BehaviorSM(Behavior):
 	'''
-	This is a template for a single stage, single action server arm movement connected to a generic pubsub that could communicate with a testing station.
+	Use to run the arm and door at the same time, waits for reply from single_stage_as in the hardware_flexbe_link package
 	'''
 
 
 	def __init__(self):
-		super(Single_Stage_System_BehaviorSM, self).__init__()
-		self.name = 'Single_Stage_System_Behavior'
+		super(Door_System_BehaviorSM, self).__init__()
+		self.name = 'Door_System_Behavior'
 
 		# parameters of this behavior
 		self.add_parameter('number_of_trials', 1)
 		self.add_parameter('number_of_tests', 1)
-		self.add_parameter('action_topic', 'single_stage_as')
-		self.add_parameter('pub_topic', 'reset_start')
-		self.add_parameter('sub_topic', 'reset_complete')
-		self.add_parameter('pub_int', 1)
+		self.add_parameter('pub_reset_topic', 'reset_start')
+		self.add_parameter('sub_reset_topic', 'reset_complete')
+		self.add_parameter('pub_reset_int', 1)
+		self.add_parameter('start_data_topic', 'start_collection')
+		self.add_parameter('data_int', 1)
+		self.add_parameter('action_server_topic', 'single_stage_as')
 
 		# references to used behaviors
 
@@ -72,20 +75,26 @@ class Single_Stage_System_BehaviorSM(Behavior):
 			# x:298 y:127
 			OperatableStateMachine.add('Trial Control',
 										TrialControlState(),
-										transitions={'continue': 'Single Stage Action Client', 'failed': 'failed', 'completed': 'Test Control'},
+										transitions={'continue': 'Data Capture Start Pub', 'failed': 'failed', 'completed': 'Test Control'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'completed': Autonomy.Off},
 										remapping={'number_of_trials': 'number_of_trials'})
 
-			# x:517 y:302
-			OperatableStateMachine.add('Single Stage Action Client',
-										StageActionClient(topic=self.action_topic),
-										transitions={'completed': 'Test Station PubSub', 'failed': 'failed'},
-										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
-
 			# x:343 y:437
 			OperatableStateMachine.add('Test Station PubSub',
-										GenericPubSub(pubtopic=self.pub_topic, subtopic=self.sub_topic, pubint=self.pub_int),
+										GenericPubSub(pubtopic=self.pub_reset_topic, subtopic=self.sub_reset_topic, pubint=self.pub_reset_int),
 										transitions={'completed': 'Trial Control', 'failed': 'failed'},
+										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:615 y:166
+			OperatableStateMachine.add('Data Capture Start Pub',
+										GenericPub(pubtopic=self.start_data_topic, pubint=self.data_int),
+										transitions={'completed': 'stage_ac', 'failed': 'failed'},
+										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:655 y:328
+			OperatableStateMachine.add('stage_ac',
+										StageActionClient(topic=self.action_server_topic),
+										transitions={'completed': 'Test Station PubSub', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
 

@@ -1,0 +1,16 @@
+<launch>
+
+<include file="$(find flexbe_onboard)/launch/behavior_onboard.launch" />
+<include file="$(find flexbe_app)/launch/flexbe_ocs.launch">
+	<arg name = "no_app" value = "false"/>
+</include>
+
+<node
+name="single_stage_as"
+pkg="hardware_flexbe_link"
+type="single_stage_as"
+output="screen"
+/>
+
+</launch>
+

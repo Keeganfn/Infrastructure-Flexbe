@@ -17,7 +17,7 @@ from grasp_reset_flexbe_states.test_control_state_GR import Test_Control_State_G
 
 '''
 Created on Thu Jun 11 2020
-@author: Keegan
+@author: Keegan Nave
 '''
 class Test_Control_Behavior_GRSM(Behavior):
 	'''

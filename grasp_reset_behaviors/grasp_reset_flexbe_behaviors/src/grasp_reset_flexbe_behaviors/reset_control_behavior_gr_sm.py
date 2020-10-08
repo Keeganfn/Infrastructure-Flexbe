@@ -17,7 +17,7 @@ from grasp_reset_flexbe_states.reset_control_state_GR import Reset_Control_State
 
 '''
 Created on Wed Jun 24 2020
-@author: Keegan
+@author: Keegan Nave
 '''
 class Reset_Control_Behavior_GRSM(Behavior):
 	'''

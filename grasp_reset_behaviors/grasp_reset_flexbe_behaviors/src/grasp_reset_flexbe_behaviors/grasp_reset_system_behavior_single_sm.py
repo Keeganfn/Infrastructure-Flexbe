@@ -11,7 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from grasp_reset_flexbe_behaviors.test_control_behavior_gr_sm import Test_Control_Behavior_GRSM
 from grasp_reset_flexbe_behaviors.trial_control_behavior_gr_sm import Trial_Control_Behavior_GRSM
 from grasp_reset_flexbe_behaviors.reset_control_behavior_gr_sm import Reset_Control_Behavior_GRSM
-from infrastructure_flexbe_states.stage_ac import StageActionClient as infrastructure_flexbe_states__StageActionClient
+from infrastructure_flexbe_states.stage_ac import StageActionClient
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -20,7 +20,7 @@ from infrastructure_flexbe_states.stage_ac import StageActionClient as infrastru
 
 '''
 Created on Fri Sep 18 2020
-@author: Keegan
+@author: Keegan Nave
 '''
 class Grasp_Reset_System_Behavior_SingleSM(Behavior):
 	'''
@@ -83,7 +83,7 @@ class Grasp_Reset_System_Behavior_SingleSM(Behavior):
 
 			# x:737 y:220
 			OperatableStateMachine.add('Single Stage Action Client',
-										infrastructure_flexbe_states__StageActionClient(topic=self.action_topic),
+										StageActionClient(topic=self.action_topic),
 										transitions={'completed': 'Reset_Control_Behavior_GR', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 

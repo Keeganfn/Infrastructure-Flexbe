@@ -3,7 +3,7 @@ from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyActionClient
 
 # example import of required action
-from arm_control_pkg.msg import StageAction, StageGoal
+from infrastructure_msgs.msg import StageAction, StageGoal
 
 
 class StageActionClient(EventState):

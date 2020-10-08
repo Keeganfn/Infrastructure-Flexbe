@@ -4,7 +4,7 @@
 
 	<executable package_path="grasp_reset_flexbe_behaviors.test_control_behavior_gr_sm" class="Test_Control_Behavior_GRSM" />
 	<tagstring></tagstring>
-	<author>Keegan</author>
+	<author>Keegan Nave</author>
 	<date>Thu Jun 11 2020</date>
 	<description>
 		This Behavior contains the Monitor_State and the Test_Control state. This is where the initial test information will be passed in and Test_control will store it as userdata.
