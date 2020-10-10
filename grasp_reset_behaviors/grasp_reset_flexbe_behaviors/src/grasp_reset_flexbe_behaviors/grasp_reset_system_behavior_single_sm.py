@@ -12,6 +12,7 @@ from grasp_reset_flexbe_behaviors.test_control_behavior_gr_sm import Test_Contro
 from grasp_reset_flexbe_behaviors.trial_control_behavior_gr_sm import Trial_Control_Behavior_GRSM
 from grasp_reset_flexbe_behaviors.reset_control_behavior_gr_sm import Reset_Control_Behavior_GRSM
 from infrastructure_flexbe_states.stage_ac import StageActionClient
+from infrastructure_flexbe_states.data_collection_ac import DataCollectionActionClient
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -34,6 +35,7 @@ class Grasp_Reset_System_Behavior_SingleSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('action_topic', 'single_stage_as')
+		self.add_parameter('data_collection_server_topic', 'data_collection_as')
 
 		# references to used behaviors
 		self.add_behavior(Test_Control_Behavior_GRSM, 'Test_Control_Behavior_GR')
@@ -70,7 +72,7 @@ class Grasp_Reset_System_Behavior_SingleSM(Behavior):
 			# x:583 y:54
 			OperatableStateMachine.add('Trial_Control_Behavior_GR',
 										self.use_behavior(Trial_Control_Behavior_GRSM, 'Trial_Control_Behavior_GR'),
-										transitions={'continue': 'Single Stage Action Client', 'failed': 'failed', 'trials_complete': 'Test_Control_Behavior_GR'},
+										transitions={'continue': 'Data Collection AC', 'failed': 'failed', 'trials_complete': 'Test_Control_Behavior_GR'},
 										autonomy={'continue': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'trials_complete': Autonomy.Inherit},
 										remapping={'number_of_trials': 'number_of_trials', 'rotation': 'rotation'})
 
@@ -85,6 +87,12 @@ class Grasp_Reset_System_Behavior_SingleSM(Behavior):
 			OperatableStateMachine.add('Single Stage Action Client',
 										StageActionClient(topic=self.action_topic),
 										transitions={'completed': 'Reset_Control_Behavior_GR', 'failed': 'failed'},
+										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:826 y:95
+			OperatableStateMachine.add('Data Collection AC',
+										DataCollectionActionClient(topic=self.data_collection_server_topic),
+										transitions={'completed': 'Single Stage Action Client', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
 

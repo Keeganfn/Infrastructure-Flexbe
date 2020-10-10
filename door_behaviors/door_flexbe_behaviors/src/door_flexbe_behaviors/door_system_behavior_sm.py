@@ -12,6 +12,7 @@ from infrastructure_flexbe_states.test_control_state import TestControlState
 from infrastructure_flexbe_states.trial_control_state import TrialControlState
 from infrastructure_flexbe_states.generic_pubsub import GenericPubSub
 from infrastructure_flexbe_states.generic_pub import GenericPub
+from infrastructure_flexbe_states.data_collection_ac import DataCollectionActionClient
 from infrastructure_flexbe_states.stage_ac import StageActionClient
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -42,6 +43,7 @@ class Door_System_BehaviorSM(Behavior):
 		self.add_parameter('start_data_topic', 'start_collection')
 		self.add_parameter('data_int', 1)
 		self.add_parameter('action_server_topic', 'single_stage_as')
+		self.add_parameter('data_collection_server_topic', 'data_collection_as')
 
 		# references to used behaviors
 
@@ -75,24 +77,30 @@ class Door_System_BehaviorSM(Behavior):
 			# x:298 y:127
 			OperatableStateMachine.add('Trial Control',
 										TrialControlState(),
-										transitions={'continue': 'Data Capture Start Pub', 'failed': 'failed', 'completed': 'Test Control'},
+										transitions={'continue': 'Data Collection AC', 'failed': 'failed', 'completed': 'Test Control'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'completed': Autonomy.Off},
 										remapping={'number_of_trials': 'number_of_trials'})
 
-			# x:343 y:437
+			# x:335 y:559
 			OperatableStateMachine.add('Test Station PubSub',
 										GenericPubSub(pubtopic=self.pub_reset_topic, subtopic=self.sub_reset_topic, pubint=self.pub_reset_int),
 										transitions={'completed': 'Trial Control', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:615 y:166
+			# x:817 y:202
 			OperatableStateMachine.add('Data Capture Start Pub',
 										GenericPub(pubtopic=self.start_data_topic, pubint=self.data_int),
-										transitions={'completed': 'stage_ac', 'failed': 'failed'},
+										transitions={'completed': 'Stage AC', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:655 y:328
-			OperatableStateMachine.add('stage_ac',
+			# x:565 y:128
+			OperatableStateMachine.add('Data Collection AC',
+										DataCollectionActionClient(topic=self.data_collection_server_topic),
+										transitions={'completed': 'Data Capture Start Pub', 'failed': 'failed'},
+										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:669 y:407
+			OperatableStateMachine.add('Stage AC',
 										StageActionClient(topic=self.action_server_topic),
 										transitions={'completed': 'Test Station PubSub', 'failed': 'failed'},
 										autonomy={'completed': Autonomy.Off, 'failed': Autonomy.Off})

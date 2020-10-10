@@ -21,6 +21,8 @@
 
 		<param type="text" name="action_topic" default="single_stage_as" label="action_topic" hint="Sets the action_topic" />
 
+		<param type="text" name="data_collection_server_topic" default="data_collection_as" label="data_collection_server_topic" hint="Sets the data_collection_server_topic" />
+
 	</params>
 
 
